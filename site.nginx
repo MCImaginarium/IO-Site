@@ -1,0 +1,132 @@
+server {
+    server_name www.iocraft.org iocraft.org;
+    root /storage/wordpress;
+    index index.php;
+    location /listen.mp3 {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://127.0.0.1:8000/listen.mp3;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+    }
+    location / {
+        index index.php index.html index.htm;
+        try_files $uri $uri/ /index.php?$args;
+    }
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+	fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+    }
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/iocraft.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/iocraft.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+
+
+}
+server {
+    server_name stats.iocraft.org;
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://play.iocraft.org:7777/bAkEd/server/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+    }
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/iocraft.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/iocraft.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+server {
+    server_name radio.iocraft.org;
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://radio.iocraft.org:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+    }
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/iocraft.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/iocraft.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+server {
+    server_name bot.iocraft.org;
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+    }
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/iocraft.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/iocraft.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+
+server {
+    server_name map.iocraft.org;
+    location / {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_pass http://88.255.108.39:8124;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_next_upstream error timeout http_502 http_503 http_504;
+    }
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/iocraft.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/iocraft.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+
+}
+server {
+    if ($host = map.iocraft.org) {
+        return 301 https://map.iocraft.org$request_uri;
+    } # managed by Certbot
+    if ($host = bot.iocraft.org) {
+        return 301 https://bot.iocraft.org$request_uri;
+    } # managed by Certbot
+    if ($host = radio.iocraft.org) {
+        return 301 https://radio.iocraft.org$request_uri;
+    } # managed by Certbot
+    if ($host = stats.iocraft.org) {
+        return 301 https://stats.iocraft.org$request_uri;
+    } # managed by Certbot
+    if ($host = www.iocraft.org) {
+        return 301 https://www.iocraft.org$request_uri;
+    } # managed by Certbot
+    if ($host = iocraft.org) {
+        return 301 https://www.iocraft.org$request_uri;
+    } # managed by Certbot
+    listen 80;
+    server_name www.iocraft.org iocraft.org map.iocraft.org bot.iocraft.org radio.iocraft.org;
+    return 404; # managed by Certbot
+}
