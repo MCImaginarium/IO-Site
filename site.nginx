@@ -1,6 +1,6 @@
 server {
     server_name www.iocraft.org iocraft.org;
-    root /storage/wordpress;
+    root /storage/site;
     index index.php;
     location /listen.mp3 {
         proxy_set_header Host $http_host;
